@@ -1,29 +1,73 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import home from "views/home";
 
-Vue.use(VueRouter)
+const register = () => import("views/register");
+const login = () => import("views/login");
+const userInfo = () => import("views/userinfo");
+const edit = () => import("views/edit");
+const detail = () => import("views/detail");
 
-  const routes = [
+Vue.use(VueRouter);
+
+const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
+    path: "/",
+    name: "home",
+    component: home,
+    meta:{
+      keepalive:true
+    }
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  }
-]
+    path: "/register",
+    name: "register",
+    component: register,
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: login,
+  },
+  {
+    path: "/userinfo",
+    name: "userinfo",
+    component: userInfo,
+    meta: {
+      istoken: true,
+    },
+  },
+  {
+    path: "/edit",
+    name: "edit",
+    component: edit,
+    meta: {
+      istoken: true,
+    },
+  },
+  {
+    path: "/detail/:id",
+    name: "detail",
+    component: detail,
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+router.beforeEach((to, from, next) => {
+  if (
+    (!localStorage.getItem("id") || !localStorage.getItem("token")) &&
+    to.meta.istoken == true
+  ) {
+    router.push("/login");
+    Vue.prototype.$msg.fail("请重新登录一次");
+    return;
+  }
+  next();
+});
+
+export default router;

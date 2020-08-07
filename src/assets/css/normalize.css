@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  box-sizing: border-box;
+  background-color: #f4f4f4;
+}
+
+input{
+  outline:0;
+  border: 0;
+}
+
+button{
+  outline:0;
+  border: 0;
+}

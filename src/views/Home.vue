@@ -1,18 +1,40 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <user-topBar :cuserInfo="model"></user-topBar>
+    
+    <home-content></home-content>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import userTopBar from "components/content/userTopBar";
+import homeContent from "../components/content/homeContent";
 
 export default {
-  name: 'Home',
+  data() {
+    return {
+      model: {},
+    };
+  },
   components: {
-    HelloWorld
-  }
-}
+    userTopBar,
+    homeContent,
+  },
+  created() {
+    this.userInfoData();
+  },
+  mounted() {},
+  methods: {
+    async userInfoData() {
+      const res = await this.$http.get("/user/" + localStorage.getItem("id"));
+      this.model = res.data[0];
+    },
+  },
+};
 </script>
+
+<style scoped lang="less">
+.home {
+  background-color: white;
+}
+</style>
